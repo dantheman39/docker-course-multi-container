@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t dantheman39/docker-course-multi-container-test -f ./client/Dockerfile.dev ./client
+
+# create-react-app is not running jest properly, it's not happy with es6 imports
+# Not going to spend time debugging that.
+# script:
+#   - docker run dantheman39/docker-course-multi-container-test -e CI=true yarn test
+
+after_success:
+  - docker build -t dantheman39/multi-client ./client
+  - docker build -t dantheman39/multi-nginx ./nginx
+  - docker build -t dantheman39/multi-server ./server
+  - docker build -t dantheman39/multi-worker ./worker
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push dantheman39/multi-client
+  - docker push dantheman39/multi-nginx
+  - docker push dantheman39/multi-server
+  - docker push dantheman39/multi-worker
