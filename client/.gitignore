@@ -1,0 +1,9 @@
+**/node_modules
+*.swp
+*.swo
+*.idea
+*.DS_Store
+**.parcel-cache
+**.cache
+**/build
+yarn-error.log
